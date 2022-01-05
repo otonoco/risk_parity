@@ -34,11 +34,11 @@ from bs4 import BeautifulSoup
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"}
 
 def get_stock_rt_price(symbol):
-    url = f'https://in.finance.yahoo.com/quote/{symbol}' 
+    url = f'https://finance.yahoo.com/quote/{symbol}' 
     r = requests.get(url)
     content = BeautifulSoup(r.content, 'lxml')
     print(content)
-    price = content.find("span", attrs={"data-reactid":32}).text
+    price = price = content.find("fin-streamer",attrs={"data-reactid":47}).text
     try:
         price = float(price.replace(',', ''))
     except ValueError as e:
@@ -52,7 +52,7 @@ def get_volatility_and_performance(symbol, end_timestamp, window_size = 20):
     #end_timestamp = int(time.time())
     start_timestamp = int(end_timestamp - (1.4 * (window_size + 1) + 4) * 86400)
     download_url = f"https://query1.finance.yahoo.com/v7/finance/download/{symbol}"
-    res=requests.get(download_url, headers=headers, params={"period1":start_timestamp,
+    res = requests.get(download_url, headers = headers, params = {"period1":start_timestamp,
                                             "period2": end_timestamp,
                                             "interval": "1d",
                                             "events": "history"
